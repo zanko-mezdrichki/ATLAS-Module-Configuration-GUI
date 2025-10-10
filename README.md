@@ -22,11 +22,11 @@ Clone the repository and install dependencies:
 
 1) **Clone** the repository
 ```bash
-git clone https://github.com/your-username/atlas-module-gui.git
+git clone https://github.com/Zazza2003/ATLAS-Module-Configuration-GUI/
 ```
 2) **Navigate** into the project folder
 ```bash
-cd atlas-module-gui
+cd ATLAS-Module-Configuration-GUI
 ```
 
 3) **Install** dependencies

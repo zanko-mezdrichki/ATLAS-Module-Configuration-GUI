@@ -37,7 +37,7 @@ pip install PyQt5
 
 1)**Run the application**:
 ```bash
-python main.py
+python gui_atlas.py
 ```
 2)**Load a module**: Enter the serial number or browse to the module folder.
 
@@ -49,9 +49,9 @@ python main.py
 
 # File Structure
 ```plaintext
-atlas-module-gui/
+ATLAS-Module-Configuration-GUI/
 │
-├── main.py  
+├── gui_atlas.py  
 ├── README.md 
 └── LICENSE
 ```

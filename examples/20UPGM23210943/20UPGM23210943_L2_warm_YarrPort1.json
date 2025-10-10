@@ -1,0 +1,37 @@
+{
+    "chipType": "ITKPIXV2",
+    "chips": [
+        {
+            "config": "L2_warm/0x22e94_L2_warm.json",
+            "path": "relToCon",
+            "tx": 1,
+            "rx": 6,
+            "enable": 1,
+            "locked": 0
+        },
+        {
+            "config": "L2_warm/0x22e7a_L2_warm.json",
+            "path": "relToCon",
+            "tx": 1,
+            "rx": 5,
+            "enable": 1,
+            "locked": 0
+        },
+        {
+            "config": "L2_warm/0x22e39_L2_warm.json",
+            "path": "relToCon",
+            "tx": 1,
+            "rx": 4,
+            "enable": 1,
+            "locked": 0
+        },
+        {
+            "config": "L2_warm/0x22e3c_L2_warm.json",
+            "path": "relToCon",
+            "tx": 1,
+            "rx": 7,
+            "enable": 1,
+            "locked": 0
+        }
+    ]
+}

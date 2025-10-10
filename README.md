@@ -39,7 +39,7 @@ pip install PyQt5
 ```bash
 python gui_atlas.py
 ```
-2)**Load a module**: Enter the serial number or browse to the module folder.
+2)**Load a module**: Enter the serial number or browse to the module folder. 2 examples are provided. 
 
 3)**Modify parameters**: Navigate to the parameter table, select a parameter, and edit its value with type guidance.
 
@@ -51,11 +51,18 @@ python gui_atlas.py
 ```plaintext
 ATLAS-Module-Configuration-GUI/
 │
-├── gui_atlas.py  
-├── README.md 
-└── LICENSE
+├── gui_atlas.py
+├── README.md
+├── LICENSE
+└── examples/
+    ├── 20UPGM22110267/
+    │    └── ...
+    └── 20UPGM23210943/
+        └── ...
 ```
 # Technologies Used
+-**Python 3.8.10**
+
 -**PyQt5** for GUI
 
 -**JSON** for configuration data

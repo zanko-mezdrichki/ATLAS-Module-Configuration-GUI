@@ -18,22 +18,20 @@ class MainWindow(QMainWindow):
         self.setWindowIcon(QIcon("atlas_logo.png"))
         self.setGeometry(700, 300, 1200, 700)
         
-        # Directory base
+        # Directory base(needs to be changed)
         self.base_directory = "//wsl$/Ubuntu/home/zanko/pf_labs/Interfaccia"
         
-        # Stack per le 3 pagine
         self.stacked_widget = QStackedWidget()
         self.setCentralWidget(self.stacked_widget)
         
-        self.page1 = QWidget()  # Caricamento
-        self.page2 = QWidget()  # Manipolazione
-        self.page3 = QWidget()  # Riassunto
+        self.page1 = QWidget()  # Loading
+        self.page2 = QWidget()  # Manipolation
+        self.page3 = QWidget()  # Summary
         
         self.stacked_widget.addWidget(self.page1)
         self.stacked_widget.addWidget(self.page2)
         self.stacked_widget.addWidget(self.page3)
         
-        # Variabili di stato
         self.modules_data_cold = {}
         self.modules_data_warm = {}
         self.port_info_cold = {}
@@ -47,10 +45,8 @@ class MainWindow(QMainWindow):
         self.initUI_3()
 
     def initUI_1(self):
-        """Pagina 1: Caricamento serial number"""
         layout = QVBoxLayout()
         
-        # Titolo
         title = QLabel("📡 ATLAS Module Configuration System")
         title.setAlignment(Qt.AlignCenter)
         title.setStyleSheet("font-size: 36px; font-weight: bold; color: #2E86AB; margin: 20px;")
@@ -146,14 +142,12 @@ class MainWindow(QMainWindow):
         self.page1.setLayout(layout)
         self.page1.setStyleSheet("background-color: white; padding: 20px;")
         
-        # Connessioni
         self.edit_line_path.textChanged.connect(self.check_serial_text)
         self.button_browse.clicked.connect(self.browse_folder)
         self.button_load.clicked.connect(self.load_module_data)
         self.button_next_1.clicked.connect(self.go_to_page2)
 
     def initUI_2(self):
-        """Pagina 2: Manipolazione dati con tabella"""
         layout = QVBoxLayout()
         
         # Header
@@ -167,10 +161,8 @@ class MainWindow(QMainWindow):
         self.module_info_label.setStyleSheet("font-size: 18px; color: #495057;")
         header.addWidget(self.module_info_label)
         
-        # Filtri e legenda
         filter_layout = QHBoxLayout()
-        
-        # Legenda colori
+
         legend_label = QLabel("🎨 Legend: ")
         legend_label.setStyleSheet("font-size: 18px; font-weight: bold;")
         filter_layout.addWidget(legend_label)
@@ -185,7 +177,6 @@ class MainWindow(QMainWindow):
         
         filter_layout.addSpacing(30)
         
-        # Filtri
         filter_label = QLabel("🔍 Show:")
         filter_label.setStyleSheet("font-size: 18px; font-weight: bold;")
         filter_layout.addWidget(filter_label)
@@ -214,14 +205,12 @@ class MainWindow(QMainWindow):
         
         filter_layout.addStretch()
         
-        # Tabella parametri migliorata
         self.param_table = QTableWidget()
         self.param_table.setColumnCount(5)
         self.param_table.setHorizontalHeaderLabels([
             "Type", "ChipID", "Config Name", "Parameter", "Value"
         ])
         
-        # Imposta larghezze colonne
         header_table = self.param_table.horizontalHeader()
         header_table.setSectionResizeMode(0, QHeaderView.ResizeToContents)  # Type
         header_table.setSectionResizeMode(1, QHeaderView.ResizeToContents)  # ChipID
@@ -251,10 +240,8 @@ class MainWindow(QMainWindow):
             }
         """)
         
-        # Abilita ordinamento
         self.param_table.setSortingEnabled(True)
         
-        # Bottoni azione
         button_layout = QHBoxLayout()
         
         self.button_edit = QPushButton("✏️ Edit Selected")
@@ -315,7 +302,6 @@ class MainWindow(QMainWindow):
         self.page2.setLayout(layout)
         self.page2.setStyleSheet("background-color: white; padding: 20px;")
         
-        # Connessioni
         self.button_edit.clicked.connect(self.edit_parameter)
         self.button_save.clicked.connect(self.save_all_changes)
         self.button_back_2.clicked.connect(self.go_to_page1)
@@ -325,7 +311,6 @@ class MainWindow(QMainWindow):
         self.filter_warm.stateChanged.connect(self.populate_parameter_table)
 
     def initUI_3(self):
-        """Pagina 3: Riassunto"""
         layout = QVBoxLayout()
         
         title = QLabel("📋 Configuration Summary")
@@ -374,12 +359,10 @@ class MainWindow(QMainWindow):
         self.page3.setLayout(layout)
         self.page3.setStyleSheet("background-color: white; padding: 20px;")
         
-        # Connessioni
         self.button_back_3.clicked.connect(self.go_to_page2)
         self.button_finish.clicked.connect(self.finish_and_reset)
 
     def check_serial_text(self, text):
-        """Controlla validità serial number"""
         if os.path.isdir(text):
             self.edit_line_path.setStyleSheet("""
                 font-size: 24px;
@@ -405,7 +388,6 @@ class MainWindow(QMainWindow):
             """)
     
     def find_folder_by_serial(self, serial):
-        """Cerca cartella per serial number"""
         if not os.path.isdir(self.base_directory):
             return None
         
@@ -416,13 +398,11 @@ class MainWindow(QMainWindow):
         return None
     
     def browse_folder(self):
-        """Apre dialog per selezione cartella"""
         folder = QFileDialog.getExistingDirectory(self, "Select Module Folder", self.base_directory)
         if folder:
             self.edit_line_path.setText(folder)
     
     def load_module_data(self):
-        """Carica dati cold e warm"""
         input_text = self.edit_line_path.text().strip()
         
         if os.path.isdir(input_text):
@@ -437,14 +417,12 @@ class MainWindow(QMainWindow):
         
         self.serial_number = os.path.basename(base_path)
         
-        # Reset dati
         self.modules_data_cold.clear()
         self.modules_data_warm.clear()
         self.port_info_cold.clear()
         self.port_info_warm.clear()
         self.modified_data.clear()
         
-        # Carica configurazioni
         cold_loaded = self.load_configuration(base_path, "cold")
         warm_loaded = self.load_configuration(base_path, "warm")
         
@@ -455,7 +433,6 @@ class MainWindow(QMainWindow):
             info += f"  • Unique warm configurations: {len(self.modules_data_warm)}\n\n"
             info += f"🔌 Front End Configurations:\n\n"
             
-            # Mostra solo configurazioni uniche
             all_chipIDs = set(list(self.modules_data_cold.keys()) + list(self.modules_data_warm.keys()))
             
             for chipID in sorted(all_chipIDs):
@@ -484,21 +461,18 @@ class MainWindow(QMainWindow):
             QMessageBox.warning(self, "Error", "Failed to load module configurations")
 
     def load_configuration(self, base_path, config_type):
-        """Carica configurazione (cold o warm) - una sola volta per ChipID"""
         config_folder = f"L2_{config_type}"
         config_path = os.path.join(base_path, config_folder)
         
         if not os.path.exists(config_path):
             return False
         
-        # Trova port files nella cartella principale
         port_files = [f for f in os.listdir(base_path)
                      if f.endswith('.json') and config_type in f.lower() and 'YarrPort' in f]
         
         port_dict = self.port_info_cold if config_type == "cold" else self.port_info_warm
         modules_dict = self.modules_data_cold if config_type == "cold" else self.modules_data_warm
         
-        # Carica dati dai port files (per tenere traccia delle connessioni)
         for port_file in port_files:
             port_file_path = os.path.join(base_path, port_file)
             
@@ -514,7 +488,6 @@ class MainWindow(QMainWindow):
                     if not config_file:
                         continue
                     
-                    # Carica il file di configurazione del chip
                     chip_config_path = os.path.join(base_path, config_file)
                     if not os.path.exists(chip_config_path):
                         continue
@@ -522,7 +495,6 @@ class MainWindow(QMainWindow):
                     with open(chip_config_path, 'r') as cf:
                         chip_data = json.load(cf)
                     
-                    # Estrai ChipID e Name
                     chipID = None
                     config_name = None
                     for chip_type in ["ITKPIXV2", "RD53B"]:
@@ -536,7 +508,6 @@ class MainWindow(QMainWindow):
                     
                     chipID = str(chipID)
                     
-                    # Salva info porta solo per riferimento
                     port_dict[port_name].append({
                         'chipID': chipID,
                         'config_name': config_name,
@@ -545,9 +516,7 @@ class MainWindow(QMainWindow):
                         'enable': chip.get('enable', 1)
                     })
                     
-                    # Carica parametri solo se questo ChipID non è già stato processato
                     if chipID not in modules_dict:
-                        # Estrai parametri importanti
                         important_keys = [
                             "EnCoreCol0", "EnCoreCol1", "EnCoreCol2", "EnCoreCol3",
                             "SldoTrimA", "SldoTrimD", "ADCcalPar",
@@ -581,21 +550,17 @@ class MainWindow(QMainWindow):
         return len(modules_dict) > 0
 
     def go_to_page2(self):
-        """Vai a pagina 2 e popola tabella"""
         self.populate_parameter_table()
         self.module_info_label.setText(f"Module: {self.serial_number}")
         self.stacked_widget.setCurrentWidget(self.page2)
     
     def populate_parameter_table(self):
-        """Popola tabella parametri con colori distintivi - solo parametri unici"""
         self.param_table.setRowCount(0)
-        self.param_table.setSortingEnabled(False)  # Disabilita durante popolamento
+        self.param_table.setSortingEnabled(False)
         
-        # Controlla filtri
         show_cold = self.filter_cold.isChecked()
         show_warm = self.filter_warm.isChecked()
         
-        # Unisci tutti i parametri
         all_params = set()
         for module in self.modules_data_cold.values():
             all_params.update(module['important_data'].keys())
@@ -606,7 +571,7 @@ class MainWindow(QMainWindow):
         
         row = 0
         
-        # Popola COLD
+        # COLD
         if show_cold:
             for chipID in sorted(all_chipIDs):
                 if chipID in self.modules_data_cold:
@@ -651,7 +616,7 @@ class MainWindow(QMainWindow):
                         
                         row += 1
         
-        # Popola WARM
+        # WARM
         if show_warm:
             for chipID in sorted(all_chipIDs):
                 if chipID in self.modules_data_warm:
@@ -696,13 +661,11 @@ class MainWindow(QMainWindow):
                         
                         row += 1
         
-        self.param_table.setSortingEnabled(True)  # Riabilita ordinamento
-        # Aggiorna info
+        self.param_table.setSortingEnabled(True)
         total_rows = self.param_table.rowCount()
         self.module_info_label.setText(f"Module: {self.serial_number} | Total entries: {total_rows}")
 
     def edit_parameter(self):
-        """Modifica parametro selezionato"""
         current_row = self.param_table.currentRow()
         if current_row < 0:
             QMessageBox.warning(self, "Warning", "Please select a parameter to edit")
@@ -770,7 +733,6 @@ class MainWindow(QMainWindow):
         layout.addWidget(QLabel("<b>New Value:</b>"))
         layout.addWidget(value_input)
         
-        # Tipo di dato
         type_hint = self.get_parameter_type_hint(param)
         hint_label = QLabel(f"ℹ️ Expected type: <i>{type_hint}</i>")
         hint_label.setStyleSheet("font-size: 14px; color: #6C757D;")
@@ -792,13 +754,10 @@ class MainWindow(QMainWindow):
                 return
             
             try:
-                # Valida e converti
                 converted_value = self.convert_value(param, new_value)
                 
-                # Aggiorna tabella
                 self.param_table.item(current_row, 4).setText(str(converted_value))
                 
-                # Aggiorna dati interni
                 if is_cold and chipID in self.modules_data_cold:
                     self.modules_data_cold[chipID]['important_data'][param] = converted_value
                     data_type = "cold"
@@ -809,7 +768,6 @@ class MainWindow(QMainWindow):
                     QMessageBox.warning(self, "Error", "Module data not found")
                     return
                 
-                # Salva modifiche
                 key = f"{chipID}_{param}_{data_type}"
                 self.modified_data[key] = {
                     'chipID': chipID,
@@ -834,7 +792,6 @@ class MainWindow(QMainWindow):
                 QMessageBox.warning(self, "Error", f"Error: {str(e)}")
 
     def get_parameter_type_hint(self, param):
-        """Restituisce il tipo di dato atteso per il parametro"""
         if param in ["EnCoreCol0", "EnCoreCol1", "EnCoreCol2", "EnCoreCol3",
                      "SldoTrimA", "SldoTrimD"]:
             return "integer"
@@ -846,7 +803,6 @@ class MainWindow(QMainWindow):
             return "string"
 
     def convert_value(self, param, value_str):
-        """Converte valore in base al tipo di parametro"""
         if param in ["EnCoreCol0", "EnCoreCol1", "EnCoreCol2", "EnCoreCol3",
                      "SldoTrimA", "SldoTrimD"]:
             return int(value_str)
@@ -857,12 +813,10 @@ class MainWindow(QMainWindow):
         return value_str
 
     def save_all_changes(self):
-        """Salva tutte le modifiche"""
         if not self.modified_data:
             QMessageBox.information(self, "Info", "No changes to save")
             return
         
-        # Mostra riepilogo modifiche
         summary = "The following changes will be saved:\n\n"
         cold_count = 0
         warm_count = 0
@@ -883,7 +837,6 @@ class MainWindow(QMainWindow):
         
         if reply == QMessageBox.Yes:
             try:
-                # Salva su file
                 self.save_to_files()
                 QMessageBox.information(self, "Success",
                     f"All changes saved successfully!\n\n"
@@ -894,7 +847,6 @@ class MainWindow(QMainWindow):
                 QMessageBox.critical(self, "Error", f"Failed to save files:\n{str(e)}")
 
     def save_to_files(self):
-        """Salva file modificati"""
         base_path = self.find_folder_by_serial(self.serial_number)
         if not base_path:
             return
@@ -902,18 +854,15 @@ class MainWindow(QMainWindow):
         new_path = base_path + "_modified"
         os.makedirs(new_path, exist_ok=True)
         
-        # Crea cartelle cold e warm
         cold_path = os.path.join(new_path, "L2_cold")
         warm_path = os.path.join(new_path, "L2_warm")
         os.makedirs(cold_path, exist_ok=True)
         os.makedirs(warm_path, exist_ok=True)
         
-        # Salva cold
         for chipID, module in self.modules_data_cold.items():
             filename = os.path.basename(module['file_path'])
             save_path = os.path.join(cold_path, filename)
             
-            # Aggiorna i dati nel JSON completo
             chip_type = "ITKPIXV2" if "ITKPIXV2" in module['full_data'] else "RD53B"
             for param, value in module['important_data'].items():
                 if param in module['full_data'][chip_type]['GlobalConfig']:
@@ -924,7 +873,6 @@ class MainWindow(QMainWindow):
             with open(save_path, 'w') as f:
                 json.dump(module['full_data'], f, indent=4)
         
-        # Salva warm
         for chipID, module in self.modules_data_warm.items():
             filename = os.path.basename(module['file_path'])
             save_path = os.path.join(warm_path, filename)
@@ -939,7 +887,6 @@ class MainWindow(QMainWindow):
             with open(save_path, 'w') as f:
                 json.dump(module['full_data'], f, indent=4)
         
-        # Copia anche i file Port
         original_files = os.listdir(base_path)
         for f in original_files:
             if f.endswith('.json') and 'YarrPort' in f:
@@ -966,13 +913,11 @@ class MainWindow(QMainWindow):
         summary = f"📋 Configuration Summary for Module: {self.serial_number}\n"
         summary += "=" * 80 + "\n\n"
         
-        # Statistiche generali
         summary += "📊 General Statistics:\n"
         summary += f"  • Total cold modules: {len(self.modules_data_cold)}\n"
         summary += f"  • Total warm modules: {len(self.modules_data_warm)}\n"
         summary += f"  • Total modifications: {len(self.modified_data)}\n\n"
         
-        # Informazioni porte e connettività (solo per reference)
         summary += "🔌 Connectivity Information (Port Assignments):\n\n"
         
         summary += "  COLD Configuration:\n"
@@ -991,7 +936,6 @@ class MainWindow(QMainWindow):
                 config_name = chip_info.get('config_name', 'N/A')
                 summary += f"      • Config: {config_name} (ChipID {chip_info['chipID']}): RX={chip_info['rx']}, TX={chip_info['tx']} [{status}]\n"
         
-        # Modifiche effettuate
         if self.modified_data:
             summary += "\n" + "=" * 80 + "\n"
             summary += "✏️ Modified Parameters:\n\n"
@@ -1003,7 +947,6 @@ class MainWindow(QMainWindow):
             summary += "\n" + "=" * 80 + "\n"
             summary += "ℹ️ No parameters were modified\n\n"
         
-        # Parametri per chip (senza ripetizioni)
         summary += "=" * 80 + "\n"
         summary += "📝 All Parameters by Chip:\n\n"
         
@@ -1029,7 +972,6 @@ class MainWindow(QMainWindow):
             
             summary += "\n"
         
-        # Info salvataggio
         summary += "=" * 80 + "\n"
         if self.file_saved:
             summary += f"💾 Files saved to: {self.file_saved}\n"
@@ -1042,13 +984,11 @@ class MainWindow(QMainWindow):
         self.summary_text.setText(summary)
     
     def finish_and_reset(self):
-        """Termina e resetta applicazione"""
         reply = QMessageBox.question(self, "Finish",
             "Return to start screen?\n\nAll unsaved changes will be lost.",
             QMessageBox.Yes | QMessageBox.No)
         
         if reply == QMessageBox.Yes:
-            # Reset completo
             self.modules_data_cold.clear()
             self.modules_data_warm.clear()
             self.port_info_cold.clear()
@@ -1070,7 +1010,6 @@ class MainWindow(QMainWindow):
 def main():
     app = QApplication(sys.argv)
     
-    # Stile applicazione globale
     app.setStyle('Fusion')
     
     window = MainWindow()

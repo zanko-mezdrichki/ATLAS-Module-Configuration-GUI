@@ -1,7 +1,7 @@
 # 🧩 ATLAS Module Configuration GUI
 
 **ATLAS Module Configuration GUI** is a **Python/PyQt5 application** designed to manage, visualize, and edit configuration parameters of ATLAS detector modules.  
-It supports both *cold* and *warm* module configurations, allowing users to safely modify parameters and export updated files while preserving the original directory structure.
+It supports both *cold* and *warm* module configurations, allowing users to safely modify parameters and export updated files.
 
 Project carried out with a university classmate and supervised by Professor Carla Sbarra. 
 
@@ -10,17 +10,15 @@ Project carried out with a university classmate and supervised by Professor Carl
 ## 🚀 Features
 
 - **Module Loading:** Load module data by entering a serial number or browsing folders. Automatically reads JSON configuration files for cold and warm modules.  
-- **Interactive Table:** Displays chip-level parameters in a color-coded table for easy distinction between cold (blue) and warm (orange) modules.  
-- **Parameter Editing:** Edit parameters directly in the GUI with type validation (integer, float, or list) and immediate feedback.  
+- **Interactive Table:** Displays different parameters in a color-coded table.  
+- **Parameter Editing:** Edit parameters directly in the GUI.  
 - **Filtering & Sorting:** Filter by cold/warm modules and sort parameters for efficient navigation.  
-- **Summary & Export:** Generate a detailed summary of module configurations and save all modifications to a new folder.  
+- **Summary & Export:** Generate a detailed summary of the activities that have been done (edits, saves).  
 - **Safe Export:** Original files are preserved; only modified parameters are overwritten in a copy of the folder.
 
 ---
 
 ## ⚙️ Installation
-
-Clone the repository and install dependencies:
 
 1) **Clone** the repository
 ```bash

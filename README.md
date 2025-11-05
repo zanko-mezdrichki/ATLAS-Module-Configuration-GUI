@@ -33,7 +33,7 @@ cd ATLAS-Module-Configuration-GUI
 ```bash
 pip install PyQt5
 ```
-# Usage
+## 🕹️ Usage
 
 1)**Run the application**:
 ```bash
@@ -47,20 +47,7 @@ python gui_atlas.py
 
 5)**View summary**: Use the summary page to review all loaded and modified data before finishing.
 
-# File Structure
-```plaintext
-ATLAS-Module-Configuration-GUI/
-│
-├── gui_atlas.py
-├── README.md
-├── LICENSE
-└── examples/
-    ├── 20UPGM22110267/
-    │    └── ...
-    └── 20UPGM23210943/
-        └── ...
-```
-# Technologies Used
+## 🤖 Technologies Used
 -**Python 3.8.10**
 
 -**PyQt5** for GUI

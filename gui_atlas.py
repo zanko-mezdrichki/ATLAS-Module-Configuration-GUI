@@ -51,7 +51,6 @@ class MainWindow(QMainWindow):
         title.setAlignment(Qt.AlignCenter)
         title.setStyleSheet("font-size: 36px; font-weight: bold; color: #2E86AB; margin: 20px;")
         
-        # Status label
         self.status_label = QLabel("📁 Enter module serial number")
         self.status_label.setAlignment(Qt.AlignCenter)
         self.status_label.setStyleSheet("""
@@ -63,7 +62,6 @@ class MainWindow(QMainWindow):
             border: 2px solid #2E86AB;
         """)
         
-        # Input area
         input_group = QGroupBox("Module Selection")
         input_group.setStyleSheet("font-size: 20px; font-weight: bold;")
         input_layout = QVBoxLayout()
@@ -107,7 +105,6 @@ class MainWindow(QMainWindow):
         
         input_group.setLayout(input_layout)
         
-        # Info area
         self.info_text = QTextEdit()
         self.info_text.setReadOnly(True)
         self.info_text.setMinimumHeight(250)
@@ -120,7 +117,6 @@ class MainWindow(QMainWindow):
         """)
         self.info_text.setText("ℹ️ Waiting for module data...\n\nThis system will load:\n• Cold configuration files\n• Warm configuration files\n• Port and RX channel information")
         
-        # Next button
         self.button_next_1 = QPushButton("Next → Modify Parameters")
         self.button_next_1.setMinimumHeight(70)
         self.button_next_1.setEnabled(False)
@@ -150,7 +146,6 @@ class MainWindow(QMainWindow):
     def initUI_2(self):
         layout = QVBoxLayout()
         
-        # Header
         header = QHBoxLayout()
         title = QLabel("⚙️ Module Parameters Configuration")
         title.setStyleSheet("font-size: 30px; font-weight: bold; color: #2E86AB;")
@@ -267,7 +262,6 @@ class MainWindow(QMainWindow):
         button_layout.addWidget(self.button_edit)
         button_layout.addWidget(self.button_save)
         
-        # Navigation
         nav_layout = QHBoxLayout()
         self.button_back_2 = QPushButton("← Back")
         self.button_back_2.setMinimumHeight(60)
@@ -571,7 +565,6 @@ class MainWindow(QMainWindow):
         
         row = 0
         
-        # COLD
         if show_cold:
             for chipID in sorted(all_chipIDs):
                 if chipID in self.modules_data_cold:
@@ -583,32 +576,27 @@ class MainWindow(QMainWindow):
                         
                         self.param_table.insertRow(row)
                         
-                        # Type (COLD)
                         type_item = QTableWidgetItem("❄️ COLD")
                         type_item.setBackground(QColor(30, 136, 229))  # Blu
                         type_item.setForeground(QColor(255, 255, 255))
                         type_item.setFlags(type_item.flags() & ~Qt.ItemIsEditable)
                         self.param_table.setItem(row, 0, type_item)
                         
-                        # ChipID
                         chip_item = QTableWidgetItem(chipID)
                         chip_item.setBackground(QColor(255, 220, 200))
                         chip_item.setFlags(chip_item.flags() & ~Qt.ItemIsEditable)
                         self.param_table.setItem(row, 1, chip_item)
                         
-                        # Config Name
                         name_item = QTableWidgetItem(config_name)
                         name_item.setBackground(QColor(255, 220, 200))
                         name_item.setFlags(name_item.flags() & ~Qt.ItemIsEditable)
                         self.param_table.setItem(row, 2, name_item)
                         
-                        # Parameter
                         param_item = QTableWidgetItem(param)
                         param_item.setBackground(QColor(255, 220, 200))  # Arancione chiaro
                         param_item.setFlags(param_item.flags() & ~Qt.ItemIsEditable)
                         self.param_table.setItem(row, 3, param_item)
                         
-                        # Value (editabile)
                         value_item = QTableWidgetItem(value)
                         value_item.setBackground(QColor(255, 240, 230))
                         value_item.setForeground(QColor(139, 0, 0))
@@ -616,7 +604,6 @@ class MainWindow(QMainWindow):
                         
                         row += 1
         
-        # WARM
         if show_warm:
             for chipID in sorted(all_chipIDs):
                 if chipID in self.modules_data_warm:
@@ -628,32 +615,27 @@ class MainWindow(QMainWindow):
                         
                         self.param_table.insertRow(row)
                         
-                        # Type (WARM)
                         type_item = QTableWidgetItem("🔥 WARM")
-                        type_item.setBackground(QColor(255, 107, 53))  # Arancione
+                        type_item.setBackground(QColor(255, 107, 53))
                         type_item.setForeground(QColor(255, 255, 255))
                         type_item.setFlags(type_item.flags() & ~Qt.ItemIsEditable)
                         self.param_table.setItem(row, 0, type_item)
                         
-                        # ChipID
                         chip_item = QTableWidgetItem(chipID)
                         chip_item.setBackground(QColor(255, 235, 205))
                         chip_item.setFlags(chip_item.flags() & ~Qt.ItemIsEditable)
                         self.param_table.setItem(row, 1, chip_item)
                         
-                        # Config Name
                         name_item = QTableWidgetItem(config_name)
                         name_item.setBackground(QColor(255, 235, 205))
                         name_item.setFlags(name_item.flags() & ~Qt.ItemIsEditable)
                         self.param_table.setItem(row, 2, name_item)
                         
-                        # Parameter
                         param_item = QTableWidgetItem(param)
                         param_item.setBackground(QColor(255, 235, 205))  # Pesca chiaro
                         param_item.setFlags(param_item.flags() & ~Qt.ItemIsEditable)
                         self.param_table.setItem(row, 3, param_item)
                         
-                        # Value (editabile)
                         value_item = QTableWidgetItem(value)
                         value_item.setBackground(QColor(255, 245, 235))
                         value_item.setForeground(QColor(139, 0, 0))
@@ -686,7 +668,6 @@ class MainWindow(QMainWindow):
         
         layout = QVBoxLayout()
         
-        # Info header
         info_widget = QLabel(f"{'❄️ COLD' if is_cold else '🔥 WARM'} Configuration")
         info_widget.setStyleSheet(f"""
             font-size: 22px;
@@ -699,7 +680,6 @@ class MainWindow(QMainWindow):
         info_widget.setAlignment(Qt.AlignCenter)
         layout.addWidget(info_widget)
         
-        # Details
         details_layout = QVBoxLayout()
         details_layout.setSpacing(10)
         
@@ -719,7 +699,6 @@ class MainWindow(QMainWindow):
         
         layout.addLayout(details_layout)
         
-        # Value input
         layout.addWidget(QLabel(f"<b style='font-size: 18px;'>Current Value:</b> <span style='color: {'#1E88E5' if is_cold else '#FF6B35'};'>{current_value}</span>"))
         
         value_input = QLineEdit(current_value)

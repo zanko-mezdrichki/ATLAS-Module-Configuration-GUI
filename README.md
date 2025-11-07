@@ -33,7 +33,7 @@ cd ATLAS-Module-Configuration-GUI
 ```bash
 pip install PyQt5
 ```
-## 🕹️ Usage
+## 🎮 Usage
 
 1)**Run the application**:
 ```bash

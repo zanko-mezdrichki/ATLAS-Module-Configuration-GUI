@@ -47,6 +47,13 @@ python gui_atlas.py
 
 5)**View summary**: Use the summary page to review all loaded and modified data before finishing.
 
+## 🕹️ Preview
+
+In the preview folder there are images showing the different pages of the GUI.
+
+To see how the GUI works: [https://youtu.be/GritVRzsUVo](https://youtu.be/GritVRzsUVo)
+
+
 ## 🤖 Technologies Used
 -**Python 3.8.10**
 

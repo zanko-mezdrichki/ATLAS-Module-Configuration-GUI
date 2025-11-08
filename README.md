@@ -1,24 +1,20 @@
-# 🧩 ATLAS Module Configuration GUI
+# ATLAS Module Configuration GUI
 
 **ATLAS Module Configuration GUI** is a **Python/PyQt5 application** designed to manage, visualize, and edit configuration parameters of ATLAS detector modules.  
 It supports both *cold* and *warm* module configurations, allowing users to safely modify parameters and export updated files.
 
 Project carried out with a university classmate and supervised by Professor Carla Sbarra. 
 
----
-
-## 🚀 Features
+# Features
 
 - **Module Loading:** Load module data by entering a serial number or browsing folders. Automatically reads JSON configuration files for cold and warm modules.  
-- **Interactive Table:** Displays different parameters in a color-coded table.  
+- **Interactive Table:** Displays different parameters in a table.  
 - **Parameter Editing:** Edit parameters directly in the GUI.  
 - **Filtering & Sorting:** Filter by cold/warm modules and sort parameters for efficient navigation.  
 - **Summary & Export:** Generate a detailed summary of the activities that have been done (edits, saves).  
 - **Safe Export:** Original files are preserved; only modified parameters are overwritten in a copy of the folder.
 
----
-
-## ⚙️ Installation
+# Installation
 
 1) **Clone** the repository
 ```bash
@@ -33,7 +29,7 @@ cd ATLAS-Module-Configuration-GUI
 ```bash
 pip install PyQt5
 ```
-## 🎮 Usage
+# Usage
 
 1)**Run the application**:
 ```bash
@@ -41,27 +37,28 @@ python gui_atlas.py
 ```
 2)**Load a module**: Enter the serial number or browse to the module folder. 2 examples are provided. 
 
-3)**Modify parameters**: Navigate to the parameter table, select a parameter, and edit its value with type guidance.
+3)**Modify parameters**: Navigate to the parameter table, select a parameter, and edit its value.
 
-4)**Save changes**: Click “Save All Changes” to export modifications to a new folder.
+4)**Save changes**: Possibility to export modifications to a new folder.
 
 5)**View summary**: Use the summary page to review all loaded and modified data before finishing.
 
-## 🕹️ Preview
+# Preview
 
 In the preview folder there are images showing the different pages of the GUI.
 
 To see how the GUI works: [https://youtu.be/GritVRzsUVo](https://youtu.be/GritVRzsUVo)
 
+# Technologies Used
 
-## 🤖 Technologies Used
--**Python 3.8.10**
+-**Python 3.12.11**
 
 -**PyQt5** for GUI
 
 -**JSON** for configuration data
 
 -**os, shutil** for file and folder management
+
 # LICENSE
 This project is licensed under the [MIT License](LICENSE).
 

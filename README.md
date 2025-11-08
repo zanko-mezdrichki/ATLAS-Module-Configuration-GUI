@@ -29,6 +29,7 @@ cd ATLAS-Module-Configuration-GUI
 ```bash
 pip install PyQt5
 ```
+
 # Usage
 
 1)**Run the application**:
@@ -51,15 +52,16 @@ To see how the GUI works: [https://youtu.be/GritVRzsUVo](https://youtu.be/GritVR
 
 # Technologies Used
 
--**Python 3.12.11**
+- Python 3.12.11
 
--**PyQt5** for GUI
+- PyQt5 - for GUI
 
--**JSON** for configuration data
+-**JSON - for configuration data
 
--**os, shutil** for file and folder management
+-os, shutil - for file and folder management
 
 # LICENSE
+
 This project is licensed under the [MIT License](LICENSE).
 
 

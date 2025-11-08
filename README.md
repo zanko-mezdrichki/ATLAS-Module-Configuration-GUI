@@ -32,17 +32,17 @@ pip install PyQt5
 
 # Usage
 
-1)**Run the application**:
+1) **Run the application**:
 ```bash
 python gui_atlas.py
 ```
-2)**Load a module**: Enter the serial number or browse to the module folder. 2 examples are provided. 
+2) **Load a module**: Enter the serial number or browse to the module folder. 2 examples are provided. 
 
-3)**Modify parameters**: Navigate to the parameter table, select a parameter, and edit its value.
+3) **Modify parameters**: Navigate to the parameter table, select a parameter, and edit its value.
 
-4)**Save changes**: Possibility to export modifications to a new folder.
+4) **Save changes**: Possibility to export modifications to a new folder.
 
-5)**View summary**: Use the summary page to review all loaded and modified data before finishing.
+5) **View summary**: Use the summary page to review all loaded and modified data before finishing.
 
 # Preview
 

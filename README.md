@@ -56,9 +56,9 @@ To see how the GUI works: [https://youtu.be/GritVRzsUVo](https://youtu.be/GritVR
 
 - PyQt5 - for GUI
 
--**JSON - for configuration data
+- JSON - for configuration data
 
--os, shutil - for file and folder management
+- os, shutil - for file and folder management
 
 # LICENSE
 

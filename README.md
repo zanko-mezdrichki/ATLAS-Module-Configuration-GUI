@@ -3,7 +3,7 @@
 **ATLAS Module Configuration GUI** is a **Python/PyQt5 application** designed to manage, visualize, and edit configuration parameters of ATLAS detector modules.  
 It supports both *cold* and *warm* module configurations, allowing users to safely modify parameters and export updated files.
 
-Project carried out with a university classmate and supervised by Professor Carla Sbarra. 
+Project carried out with a university classmate and supervised by Professor **Carla Sbarra**. 
 
 # Features
 

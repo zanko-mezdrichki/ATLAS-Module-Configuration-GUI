@@ -879,16 +879,13 @@ class MainWindow(QMainWindow):
         self.file_saved = new_path
 
     def go_to_page1(self):
-        """Torna a pagina 1"""
         self.stacked_widget.setCurrentWidget(self.page1)
     
     def go_to_page3(self):
-        """Vai a pagina 3 e genera riassunto"""
         self.generate_summary()
         self.stacked_widget.setCurrentWidget(self.page3)
     
     def generate_summary(self):
-        """Genera riassunto finale"""
         summary = f"📋 Configuration Summary for Module: {self.serial_number}\n"
         summary += "=" * 80 + "\n\n"
         

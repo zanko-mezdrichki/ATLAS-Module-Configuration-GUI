@@ -48,7 +48,7 @@ python gui_atlas.py
 
 In the preview folder there are images showing the different pages of the GUI.
 
-To see how the GUI works: [https://youtu.be/GritVRzsUVo](https://youtu.be/GritVRzsUVo)
+To see how the GUI works: [https://youtu.be/Di2jAYHDtmk](https://youtu.be/Di2jAYHDtmk)
 
 # Technologies Used
 

@@ -7,7 +7,7 @@ from PyQt5.QtWidgets import (QApplication, QMainWindow, QWidget,
                              QMessageBox, QLabel, QStackedWidget, QFileDialog,
                              QTextEdit, QTableWidget, QTableWidgetItem, QHeaderView,
                              QGroupBox, QDialog, QDialogButtonBox)
-from PyQt5.QtGui import QIcon, QColor
+from PyQt5.QtGui import  QColor
 from PyQt5.QtCore import Qt
 
 
@@ -120,41 +120,39 @@ class ConfigLoader:
     ]
     
     CHIP_TYPES = ["ITKPIXV2", "RD53B"]
-    
+
     @staticmethod
-    def load_config(base_path, cfg_type, module_data):
-        config_path = os.path.join(base_path, f"L2_{cfg_type}")
-        if not os.path.exists(config_path):
-            return False
-        
-        port_files = [f for f in os.listdir(base_path) 
-                     if f.endswith('.json') and cfg_type in f.lower() and 'YarrPort' in f]
-        
-        port_dict = module_data.get_ports_by_type(cfg_type)
-        modules_dict = module_data.get_module_by_type(cfg_type)
-        
-        for port_file in port_files:
-            try:
-                ConfigLoader._load_port_file(base_path, port_file, cfg_type, 
-                                            port_dict, modules_dict)
-            except Exception as e:
-                print(f"Error loading {port_file}: {str(e)}")
-                continue
-        
-        return len(modules_dict) > 0
-    
+    def _extract_chip_info(chip_data):
+        for chip_type in ConfigLoader.CHIP_TYPES:
+            if chip_type in chip_data:
+                params = chip_data[chip_type].get("Parameter", {})
+                chipID = params.get("ChipId")
+                config_name = params.get("Name")
+                return chipID, config_name
+        return None, None
     @staticmethod
-    def _load_port_file(base_path, port_file, cfg_type, port_dict, modules_dict):
-        with open(os.path.join(base_path, port_file), 'r') as f:
-            port_data = json.load(f)
+    def _create_module_entry(chip_data, chip_path, config_file, cfg_type, config_name):
+        imp_data = {}
         
-        port_name = port_file.replace('.json', '')
-        port_dict[port_name] = []
+        for chip_type in ConfigLoader.CHIP_TYPES:
+            if chip_type in chip_data:
+                gc = chip_data[chip_type].get("GlobalConfig", {})
+                pm = chip_data[chip_type].get("Parameter", {})
+                
+                for param in ConfigLoader.IMPORTANT_PARAMS:
+                    if param in gc:
+                        imp_data[param] = gc[param]
+                    elif param in pm:
+                        imp_data[param] = pm[param]
+                break
         
-        for chip in port_data.get('chips', []):
-            ConfigLoader._process_chip(base_path, chip, cfg_type, 
-                                      port_dict[port_name], modules_dict)
-    
+        return {
+            'full_data': chip_data,
+            'important_data': imp_data,
+            'file_path': chip_path,
+            'config_name': config_name or os.path.basename(chip_path).replace(f'_L2_{cfg_type}.json', '')
+        }
+
     @staticmethod
     def _process_chip(base_path, chip, cfg_type, port_list, modules_dict):
         config_file = chip.get('config', '')
@@ -186,41 +184,77 @@ class ConfigLoader:
             modules_dict[chipID] = ConfigLoader._create_module_entry(
                 chip_data, chip_path, config_file, cfg_type, config_name
             )
-    
-    @staticmethod
-    def _extract_chip_info(chip_data):
-        for chip_type in ConfigLoader.CHIP_TYPES:
-            if chip_type in chip_data:
-                params = chip_data[chip_type].get("Parameter", {})
-                chipID = params.get("ChipId")
-                config_name = params.get("Name")
-                return chipID, config_name
-        return None, None
-    
-    @staticmethod
-    def _create_module_entry(chip_data, chip_path, config_file, cfg_type, config_name):
-        imp_data = {}
-        
-        for chip_type in ConfigLoader.CHIP_TYPES:
-            if chip_type in chip_data:
-                gc = chip_data[chip_type].get("GlobalConfig", {})
-                pm = chip_data[chip_type].get("Parameter", {})
-                
-                for param in ConfigLoader.IMPORTANT_PARAMS:
-                    if param in gc:
-                        imp_data[param] = gc[param]
-                    elif param in pm:
-                        imp_data[param] = pm[param]
-                break
-        
-        return {
-            'full_data': chip_data,
-            'important_data': imp_data,
-            'file_path': chip_path,
-            'config_name': config_name or os.path.basename(chip_path).replace(f'_L2_{cfg_type}.json', '')
-        }
 
+    @staticmethod
+    def _load_port_file(base_path, port_file, cfg_type, port_dict, modules_dict):
+        with open(os.path.join(base_path, port_file), 'r') as f:
+            port_data = json.load(f)
+        
+        port_name = port_file.replace('.json', '')
+        port_dict[port_name] = []
+        
+        for chip in port_data.get('chips', []):
+            ConfigLoader._process_chip(base_path, chip, cfg_type, 
+                                      port_dict[port_name], modules_dict)
+    
+    
+    @staticmethod
+    def load_config(base_path, cfg_type, module_data):
+        config_path = os.path.join(base_path, f"L2_{cfg_type}")
+        if not os.path.exists(config_path):
+            return False
+        
+        port_files = [f for f in os.listdir(base_path) 
+                     if f.endswith('.json') and cfg_type in f.lower() and 'YarrPort' in f]
+        
+        port_dict = module_data.get_ports_by_type(cfg_type)
+        modules_dict = module_data.get_module_by_type(cfg_type)
+        
+        for port_file in port_files:
+            try:
+                ConfigLoader._load_port_file(base_path, port_file, cfg_type, 
+                                            port_dict, modules_dict)
+            except Exception as e:
+                print(f"Error loading {port_file}: {str(e)}")
+                continue
+        
+        return len(modules_dict) > 0
+    
 class FileSaver:
+
+    @staticmethod
+    def _save_single_module(cfg_path, module):
+        fname = os.path.basename(module['file_path'])
+        save_path = os.path.join(cfg_path, fname)
+        
+        chip_type = "ITKPIXV2" if "ITKPIXV2" in module['full_data'] else "RD53B"
+        
+        for param, value in module['important_data'].items():
+            if param in module['full_data'][chip_type]['GlobalConfig']:
+                module['full_data'][chip_type]['GlobalConfig'][param] = value
+            elif param in module['full_data'][chip_type]['Parameter']:
+                module['full_data'][chip_type]['Parameter'][param] = value
+        
+        with open(save_path, 'w') as f:
+            json.dump(module['full_data'], f, indent=4)
+
+    @staticmethod
+    def _save_module_configs(new_path, module_data):
+        for cfg_type in ["cold", "warm"]:
+            cfg_path = os.path.join(new_path, f"L2_{cfg_type}")
+            modules = module_data.get_module_by_type(cfg_type)
+            
+            for chipID, module in modules.items():
+                FileSaver._save_single_module(cfg_path, module)
+
+    @staticmethod
+    def _copy_port_files(source_path, dest_path):
+        for f in os.listdir(source_path):
+            if f.endswith('.json') and 'YarrPort' in f:
+                with open(os.path.join(source_path, f), 'r') as sf:
+                    data = json.load(sf)
+                with open(os.path.join(dest_path, f), 'w') as df:
+                    json.dump(data, df, indent=4)
     
     @staticmethod
     def save_changes(module_data):
@@ -239,59 +273,9 @@ class FileSaver:
         
         module_data.file_saved = new_path
         return new_path
-    
-    @staticmethod
-    def _save_module_configs(new_path, module_data):
-        for cfg_type in ["cold", "warm"]:
-            cfg_path = os.path.join(new_path, f"L2_{cfg_type}")
-            modules = module_data.get_module_by_type(cfg_type)
-            
-            for chipID, module in modules.items():
-                FileSaver._save_single_module(cfg_path, module)
-    
-    @staticmethod
-    def _save_single_module(cfg_path, module):
-        fname = os.path.basename(module['file_path'])
-        save_path = os.path.join(cfg_path, fname)
-        
-        chip_type = "ITKPIXV2" if "ITKPIXV2" in module['full_data'] else "RD53B"
-        
-        for param, value in module['important_data'].items():
-            if param in module['full_data'][chip_type]['GlobalConfig']:
-                module['full_data'][chip_type]['GlobalConfig'][param] = value
-            elif param in module['full_data'][chip_type]['Parameter']:
-                module['full_data'][chip_type]['Parameter'][param] = value
-        
-        with open(save_path, 'w') as f:
-            json.dump(module['full_data'], f, indent=4)
-    
-    @staticmethod
-    def _copy_port_files(source_path, dest_path):
-        for f in os.listdir(source_path):
-            if f.endswith('.json') and 'YarrPort' in f:
-                with open(os.path.join(source_path, f), 'r') as sf:
-                    data = json.load(sf)
-                with open(os.path.join(dest_path, f), 'w') as df:
-                    json.dump(data, df, indent=4)
-
-
+      
 class SummaryBuilder:
-    
-    @staticmethod
-    def build_summary(module_data):
-        lines = []
-        lines.append(f"📋 Configuration Summary for Module: {module_data.serial_number}")
-        lines.append("=" * 80)
-        lines.append("")
-        
-        SummaryBuilder._add_statistics(lines, module_data)
-        SummaryBuilder._add_connectivity(lines, module_data)
-        SummaryBuilder._add_modifications(lines, module_data)
-        SummaryBuilder._add_all_parameters(lines, module_data)
-        SummaryBuilder._add_footer(lines, module_data)
-        
-        return "\n".join(lines)
-    
+       
     @staticmethod
     def _add_statistics(lines, module_data):
         lines.append("📊 General Statistics:")
@@ -371,6 +355,21 @@ class SummaryBuilder:
         lines.append("")
         lines.append("=" * 80)
         lines.append("✅ Summary generated successfully")
+
+    @staticmethod
+    def build_summary(module_data):
+        lines = []
+        lines.append(f"📋 Configuration Summary for Module: {module_data.serial_number}")
+        lines.append("=" * 80)
+        lines.append("")
+        
+        SummaryBuilder._add_statistics(lines, module_data)
+        SummaryBuilder._add_connectivity(lines, module_data)
+        SummaryBuilder._add_modifications(lines, module_data)
+        SummaryBuilder._add_all_parameters(lines, module_data)
+        SummaryBuilder._add_footer(lines, module_data)
+        
+        return "\n".join(lines)
 
 
 class EditParameterDialog(QDialog):
